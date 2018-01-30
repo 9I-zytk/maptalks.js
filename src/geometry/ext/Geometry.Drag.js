@@ -64,18 +64,7 @@ class GeometryDragHandler extends Handler  {
         on(this.container, 'mouseleave', this._endDrag, this);
 
         this._moved = false;
-        /**
-         * drag start event
-         * @event Geometry#dragstart
-         * @type {Object}
-         * @property {String} type                    - dragstart
-         * @property {Geometry} target       - the geometry fires event
-         * @property {Coordinate} coordinate - coordinate of the event
-         * @property {Point} containerPoint  - container point of the event
-         * @property {Point} viewPoint       - view point of the event
-         * @property {Event} domEvent                 - dom event
-         */
-        this.target._fireEvent('dragstart', param);
+
         return;
     }
 
@@ -178,6 +167,18 @@ class GeometryDragHandler extends Handler  {
             if (!target.options['dragShadow']) {
                 target.hide();
             }
+            /**
+             * drag start event
+             * @event Geometry#dragstart
+             * @type {Object}
+             * @property {String} type                    - dragstart
+             * @property {Geometry} target       - the geometry fires event
+             * @property {Coordinate} coordinate - coordinate of the event
+             * @property {Point} containerPoint  - container point of the event
+             * @property {Point} viewPoint       - view point of the event
+             * @property {Event} domEvent                 - dom event
+             */
+            this.target._fireEvent('dragstart', param);
             this._shadow._fireEvent('dragstart', eventParam);
             return;
         }
@@ -243,18 +244,20 @@ class GeometryDragHandler extends Handler  {
         delete this._lastPoint;
 
         this._isDragging = false;
-        /**
-         * dragend event
-         * @event Geometry#dragend
-         * @type {Object}
-         * @property {String} type                    - dragend
-         * @property {Geometry} target       - the geometry fires event
-         * @property {Coordinate} coordinate - coordinate of the event
-         * @property {Point} containerPoint  - container point of the event
-         * @property {Point} viewPoint       - view point of the event
-         * @property {Event} domEvent                 - dom event
-         */
-        target._fireEvent('dragend', eventParam);
+        if (this._moved) {
+            /**
+             * dragend event
+             * @event Geometry#dragend
+             * @type {Object}
+             * @property {String} type                    - dragend
+             * @property {Geometry} target       - the geometry fires event
+             * @property {Coordinate} coordinate - coordinate of the event
+             * @property {Point} containerPoint  - container point of the event
+             * @property {Point} viewPoint       - view point of the event
+             * @property {Event} domEvent                 - dom event
+             */
+            target._fireEvent('dragend', eventParam);
+        }
     }
 
     isDragging() {
